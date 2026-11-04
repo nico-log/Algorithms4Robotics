@@ -29,12 +29,10 @@ A* (slide "The A* algorithm: pseudo-code")
 
 Usage
 -----
-    python grid_planners.py                          # slide wave-front map
-    python grid_planners.py --map astar_slide        # slide A* map
-    python grid_planners.py --map rooms --fps 8      # bigger map
-    python grid_planners.py --wf-conn 8 --astar-conn 4
-    python grid_planners.py --heuristic zero         # A* becomes Dijkstra
-    python grid_planners.py --save wf.gif            # or .mp4 (ffmpeg)
+    python grid_planners.py --all-gifs               # generate the 3 requested GIFs
+    python grid_planners.py --map wf_slide --save grid_wf_slide.gif
+    python grid_planners.py --map astar_slide --save grid_astar_slide.gif
+    python grid_planners.py --map rooms --fps 8 --save grid_rooms.gif
 """
 import argparse
 import heapq
@@ -454,8 +452,23 @@ class GridPanel:
 def animate(map_name="wf_slide", wf_conn=4, astar_conn=8, heuristic="auto",
             cut_corners=True, fps=4, max_search_frames=160, save=None, dpi=100):
     occ, start, goal, polygon = load_map(map_name)
-    res = [wavefront(occ, start, goal, wf_conn),
-           astar(occ, start, goal, astar_conn, heuristic, cut_corners)]
+
+    # Selezione degli algoritmi in base alla mappa / GIF richiesta
+    if map_name == "wf_slide" or (save and "grid_wf_slide" in save):
+        res = [wavefront(occ, start, goal, 4),
+               wavefront(occ, start, goal, 8)]
+    elif map_name == "astar_slide" or (save and "grid_astar_slide" in save):
+        res = [astar(occ, start, goal, 4, heuristic, cut_corners),
+               astar(occ, start, goal, 8, heuristic, cut_corners)]
+    elif map_name == "rooms" or (save and "grid_rooms" in save):
+        res = [wavefront(occ, start, goal, 4),
+               wavefront(occ, start, goal, 8),
+               astar(occ, start, goal, 4, heuristic, cut_corners),
+               astar(occ, start, goal, 8, heuristic, cut_corners)]
+    else:
+        res = [wavefront(occ, start, goal, wf_conn),
+               astar(occ, start, goal, astar_conn, heuristic, cut_corners)]
+
     for r in res:
         cost = f"{r['cost']:.1f}" if r["cost"] is not None else "-"
         print(f"[{map_name}] {r['name']:52s} {r['status']:18s} "
@@ -464,9 +477,26 @@ def animate(map_name="wf_slide", wf_conn=4, astar_conn=8, heuristic="auto",
     R, C = occ.shape
     panel_w = 6.6
     H = panel_w * R / C
-    fig = plt.figure(figsize=(2 * panel_w + 0.6, H + 2.9))
-    FH = H + 2.9
-    axes = [fig.add_axes([0.03 + 0.495 * i, 1.75 / FH, 0.455, H / FH]) for i in range(2)]
+
+    if len(res) == 2:
+        FH = H + 2.9
+        fig = plt.figure(figsize=(2 * panel_w + 0.6, FH))
+        axes = [fig.add_axes([0.03 + 0.495 * i, 1.75 / FH, 0.455, H / FH]) for i in range(2)]
+    else:  # 4 pannelli disposti in griglia 2x2
+        gap_y = 2.15
+        top_pad = 1.15
+        bot_pad = 1.75
+        FH = 2 * H + gap_y + top_pad + bot_pad
+        fig = plt.figure(figsize=(2 * panel_w + 0.6, FH))
+        y_top = (bot_pad + H + gap_y) / FH
+        y_bot = bot_pad / FH
+        axes = [
+            fig.add_axes([0.03, y_top, 0.455, H / FH]),
+            fig.add_axes([0.03 + 0.495, y_top, 0.455, H / FH]),
+            fig.add_axes([0.03, y_bot, 0.455, H / FH]),
+            fig.add_axes([0.03 + 0.495, y_bot, 0.455, H / FH]),
+        ]
+
     # cell size in points -> font sizes
     bbox = axes[0].get_position()
     cell_pt = min(bbox.width * fig.get_figwidth() / C, bbox.height * fig.get_figheight() / R) * 72
@@ -502,6 +532,7 @@ def animate(map_name="wf_slide", wf_conn=4, astar_conn=8, heuristic="auto",
         writer = FFMpegWriter(fps=fps) if save.endswith(".mp4") else PillowWriter(fps=fps)
         anim.save(save, writer=writer, dpi=dpi)
         print(f"saved {save}")
+        plt.close(fig)
     else:
         plt.show()
     return anim
@@ -520,6 +551,17 @@ if __name__ == "__main__":
                     help="forbid diagonal moves between two occupied cells")
     ap.add_argument("--fps", type=float, default=4, help="playback frame rate")
     ap.add_argument("--save", default=None, help="output .gif or .mp4")
+    ap.add_argument("--all-gifs", action="store_true",
+                    help="generate grid_wf_slide.gif, grid_astar_slide.gif and grid_rooms.gif")
     a = ap.parse_args()
-    animate(a.map, a.wf_conn, a.astar_conn, a.heuristic, not a.no_corner_cutting,
-            a.fps, save=a.save)
+
+    if a.all_gifs:
+        animate("wf_slide", heuristic=a.heuristic, cut_corners=not a.no_corner_cutting,
+                fps=a.fps, save="grid_wf_slide.gif")
+        animate("astar_slide", heuristic=a.heuristic, cut_corners=not a.no_corner_cutting,
+                fps=a.fps, save="grid_astar_slide.gif")
+        animate("rooms", heuristic=a.heuristic, cut_corners=not a.no_corner_cutting,
+                fps=8 if a.fps == 4 else a.fps, save="grid_rooms.gif")
+    else:
+        animate(a.map, a.wf_conn, a.astar_conn, a.heuristic, not a.no_corner_cutting,
+                a.fps, save=a.save)
