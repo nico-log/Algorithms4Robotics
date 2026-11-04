@@ -1,10 +1,10 @@
 # Grid-Based Algorithms
 
-## Test 1
-![test1](grid_wf_slide.gif)
+## Wavefront Algorithm
+![wf](grid_wf_slide.gif)
 
-## Test 2
-![test2](grid_astar_slide.gif)
+## A* Algorithm
+![astar](grid_astar_slide.gif)
 
-## Test 3
-![test3](grid_rooms.gif)
+## Rooms Test
+![rooms](grid_rooms.gif)
