@@ -11,6 +11,10 @@ The aim of this project is to demonstrate the operation of traditional algorithm
 - [Grid-based navigation](gridnav/README.md)
   - Wavefront
   - A*
+- [Roadmaps](roadmaps/README.md)
+  - Probabilistic methods
+  - Voronoi
+  - Cell decomposition
 
 ## Authors
 - [@badcortex](https://github.com/badcortex)
