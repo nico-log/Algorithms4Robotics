@@ -4,7 +4,9 @@
 ![prob](prob_methods.gif)
 
 ## Voronoi
-![voronoi](voronoi.gif)
+![sensor](voronoi_sensor_based.gif)
+![grid](voronoi_grid_based.gif)
+
 
 ## Cell Decomposition
 ![cell](cell_decomposition.gif)
