@@ -16,6 +16,10 @@ The aim of this project is to demonstrate the operation of traditional algorithm
   - Voronoi
   - Cell decomposition
 
+## Finite State Machines & Real Time Systems
+- [Finite State Machines](fsm/README.md)
+  - Crosswalk FSM
+
 ## Authors
 - [@badcortex](https://github.com/badcortex)
 - [@nico-log](https://github.com/nico-log)
