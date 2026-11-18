@@ -27,6 +27,16 @@ _The r-line is a straight line connecting the staat point and the destination po
 - Note that differently from bug1 and bug 2: in motion-to-goal the robot can run along the obstacle boarder and in boundary-following the robot may travel without considering the obstacle border
 - The behavior depends on the sensing range of the adopted range sensor (the ideal situation is an infinite range)
 
+### Usage
+```
+    python bug_algorithms.py                              # all 4 panels, slide map
+    python bug_algorithms.py --scenario blobs             # polygons|blobs|trap|spiral
+    python bug_algorithms.py --algos bug1 bug2            # choose panels
+    python bug_algorithms.py --algos tb0 tb2.5 tbinf      # Tangent Bug, R = 0, 2.5, inf
+    python bug_algorithms.py --fps 6                      # slower playback
+    python bug_algorithms.py --save out.gif               # or out.mp4 (ffmpeg)
+```
+
 ## Test 1 - Blob Obstacles
 ![blobs](bug_blobs.gif)
 

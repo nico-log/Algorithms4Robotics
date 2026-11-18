@@ -1,4 +1,10 @@
 # Roadmaps
+### Usage
+```
+    python cell_decomposition.py                              
+    python prob_methods.py            
+    python voronoi.py
+```
 
 ## Probabilistic Methods
 ![prob](prob_methods.gif)

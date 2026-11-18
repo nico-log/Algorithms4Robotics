@@ -24,6 +24,13 @@ Wavefront algorithm characteristics:
 - low efficiency: the breadth-first search is inefficient, a large amount of non necessary cells can be visited to assign the distance numbers
 - optimal: it finds the shortest path
 
+### Usage
+```
+    python grid_planners.py --all-gifs               # generate the 3 requested GIFs
+    python grid_planners.py --map wf_slide --save grid_wf_slide.gif
+    python grid_planners.py --map astar_slide --save grid_astar_slide.gif
+    python grid_planners.py --map rooms --fps 8 --save grid_rooms.gif
+```
 ![wf](grid_wf_slide.gif)
 
 ## A* Algorithm
